@@ -54,11 +54,13 @@
         <h1 class="app-logo">Control App</h1>
         <div class="login-card">
             <h1>Faça seu Registro</h1>
-            <label  for="email">Email</label>
+            <label  for="name">Nome</label>
+            <input type="text" name="name">
+            <label style="margin-top: 1rem;" for="email">Email</label>
             <input type="email" name="email">
             <label style="margin-top: 1rem;"  for="password">Senha</label>
             <input type="password" name="password">
-            <a style="margin-top: 1rem " href="">Não e Registrado?</a>
+            <a style="margin-top: 1rem " href="/">Ja e Registrado?</a>
             <input class="login-submit" type="submit" value="Confirmar">
         </div>
     </body>

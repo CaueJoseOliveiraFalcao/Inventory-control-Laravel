@@ -58,7 +58,7 @@
             <input type="email" name="email">
             <label style="margin-top: 1rem;"  for="password">Senha</label>
             <input type="password" name="password">
-            <a style="margin-top: 1rem " href="">Não e Registrado?</a>
+            <a style="margin-top: 1rem " href="/register">Não e Registrado?</a>
             <input class="login-submit" type="submit" value="Confirmar">
         </div>
     </body>
