@@ -48,18 +48,60 @@
                 background-color: #009900; 
                 box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
             }
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+            .success p{
+                background-color: #00b300;
+                color: white;
+                padding: 1rem;
+                border-radius: 10px
+            }
+            .error{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .error li{
+                background-color: red;
+                color: white;
+                padding: 1rem;
+                border-radius: 10px;
+                list-style: none;
+            }
+            .error ul{
+                padding: 0;
+            }
         </style>
     </head>
     <body class="antialiased">
         <h1 class="app-logo">Control App</h1>
+        @if ($errors->any())
+        <div class="error">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{$error}}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+        <div class="success">
+            @if (session('success'))
+                <p>{{session("success")}}</p>
+            @endif
+        </div>
         <div class="login-card">
-            <h1>Faça seu Login</h1>
-            <label  for="email">Email</label>
-            <input type="email" name="email">
-            <label style="margin-top: 1rem;"  for="password">Senha</label>
-            <input type="password" name="password">
-            <a style="margin-top: 1rem " href="/register">Não e Registrado?</a>
-            <input class="login-submit" type="submit" value="Confirmar">
+            <form action="{{route('login.submit')}}" method="POST">
+                @csrf
+                <h1>Faça seu login</h1>
+                <label  for="email">Email</label>
+                <input type="email" name="email">
+                <label style="margin-top: 1rem;"  for="password">Senha</label>
+                <input type="password" name="password">
+                <a style="margin-top: 1rem " href="/register">Não e registrado?</a>
+                <input class="login-submit" type="submit" value="Confirmar">
+            </form>
         </div>
     </body>
 </html>

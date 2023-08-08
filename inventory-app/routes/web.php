@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/' , [Controller::class, 'ShowLoginForm'])->name('login');
 Route::get('/register' , [Controller::class , 'ShowRegisterForm'])->name('register');
+Route::middleware(['web','auth'])->group(function () {
+    Route::get('/dashboard' , [Controller::class , 'ShowDashboard'])->name('dashboard');
+});
+Route::post('/register' , [Controller::class , 'sort'])->name('createUser');
+Route::post('/login' , [Controller::class , 'login'])->name('login.submit');
