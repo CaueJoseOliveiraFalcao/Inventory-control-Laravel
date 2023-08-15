@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Http\Controllers\Item;
+use App\Models\Item;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -78,8 +78,9 @@ class Controller extends BaseController
 
         if($user) {
             $item = new Item([
-                'name' => $ItemName,
-                'quantity' => $ItemQuantity,
+                'itemName' => $ItemName,
+                'itemQuantity' => $ItemQuantity,
+                'user_id' => $UserId
             ]);
             $user->items()->save($item);
             return response()->json(['message' => 'Item adicionado com sucesso ao usuário.']);
