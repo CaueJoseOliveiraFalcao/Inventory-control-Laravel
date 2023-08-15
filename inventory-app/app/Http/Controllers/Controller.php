@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Http\Controllers\Item;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -65,5 +66,26 @@ class Controller extends BaseController
             return redirect()->back()->withInput()->withErrors(['email' => 'As credenciais fornecidas são invalidas.']);
         }
 
+    }
+    public function addItemtoUser(Request $request)
+    {
+        $ItemName = $request -> itemName;
+        $ItemQuantity = $request -> itemQuantity;
+        $UserId = $request -> userId;
+
+
+        $user = User::find($UserId);
+
+        if($user) {
+            $item = new Item([
+                'name' => $ItemName,
+                'quantity' => $ItemQuantity,
+            ]);
+            $user->items()->save($item);
+            return response()->json(['message' => 'Item adicionado com sucesso ao usuário.']);
+        }
+        else {
+            return response()->json(['message' => 'Usuário não encontrado.'], 404);
+        }
     }
 }

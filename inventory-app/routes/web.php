@@ -22,3 +22,4 @@ Route::middleware(['web','auth'])->group(function () {
 });
 Route::post('/register' , [Controller::class , 'sort'])->name('createUser');
 Route::post('/login' , [Controller::class , 'login'])->name('login.submit');
+Route::post('/additem' , [Controller::class , 'addItemtoUser'])->name("additem");

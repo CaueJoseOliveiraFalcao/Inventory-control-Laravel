@@ -68,6 +68,32 @@
            button{
             margin: 0 0.6rem
            }
+           .container-add-itens{
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 1rem;
+                width: 300px;
+                border-style: solid;
+                padding: 1rem;
+                border-radius: 10px
+            }
+            .login-submit{
+                margin-top: 1rem;
+                padding: 1rem;
+                background-color: #00b300;
+                color: white;
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                border-style: none
+            }
+            .login-submit:hover{
+                background-color: #009900; 
+                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+
         </style>
     </head>
     <body class="antialiased">
@@ -86,6 +112,18 @@
             @if (session('success'))
                 <p>{{session("success")}}</p>
             @endif
+        </div>
+        <div class="container-add-itens">
+            <form action="{{route('additem')}}" method="POST">
+                @csrf
+                <h1>Adicione um Item</h1>
+                <label  for="itemName">Nome do Item</label>
+                <input type="text" name="itemName">
+                <label style="margin-top: 1rem;"  for="ItemQuantity">Quantidade</label>
+                <input type="number" name="itemQuantity">
+                <input type="hidden" name="userId" value="{{ auth()->user()->id }}">
+                <input class="login-submit" type="submit" value="Confirmar">
+            </form>
         </div>
         <div class="container-itens">
             <div class="item">
