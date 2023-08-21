@@ -93,12 +93,37 @@
                 display: flex;
                 flex-direction: column;
             }
-
+            .logout-button{
+                cursor: pointer;
+                margin: 1rem 0;
+                padding: 1rem;
+                background-color: red;
+                color: white;
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                border-style: none;
+            }
+            .logout-button:hover{
+                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            .save-changes-button{
+                cursor: pointer;
+                margin: 1rem 0;
+                padding: 1rem;
+                background-color: blue;
+                color: white;
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                border-style: none;
+            }
         </style>
     </head>
     <body class="antialiased">
         <h1 class="app-logo">Control App</h1>
         <h2>Dashboard</h2>
+
+        <form method='POST' action="/logout">
+            @csrf
+            <input class='logout-button' type="submit" value="Sair">
+        </form>
         @if ($errors->any())
         <div class="error">
             <ul>
@@ -124,15 +149,46 @@
                 <input type="hidden" name="userId" value="{{ auth()->user()->id }}">
                 <input class="login-submit" type="submit" value="Confirmar">
             </form>
-        </div>
-        <div class="container-itens">
-            <div class="item">
-                <p class="item-title">Morango</p>
-                <p class="item-quantity">Quantidade = 1</p>
-                <button class="item-sum"> ➕ </button>
-                <button class="item-subtraction"> ➖ </button>
-                <button class="item-delete"> 🗑️ </button>
+        </div>   
+        <form method='POST' action="/saveitems">
+            @csrf
+
+
+            <div class="container-itens">
+            @foreach ($items as $item) 
+                <div class="item">
+                    <p class="item-title"'>{{ $item->itemName }}</p>
+                    <p class="item-quantity" id="quantity-{{ $item->id }}">{{ $item->itemQuantity  }}</p>
+                    <button type='button' class="item-sum" onclick="incrementQuantity({{ $item->id }})"> ➕ </button>
+                    <button type='button' class="item-subtraction" onclick="decrementQuantity({{ $item->id }})"> ➖ </button>
+                    <input type="hidden" name="itemData[{{ $item->id }}]" id="input-quantity-{{ $item->id }}">
+                    <button class="item-delete"> 🗑️ </button>
+                </div>
+            @endforeach
+            <input class='save-changes-button' type="submit" value="Salvar Alterações">
             </div>
-        </div>
+        </form>
     </body>
+    <script>
+        function incrementQuantity(itemId) {
+            const quantityElement = document.getElementById(`quantity-${itemId}`);
+            let currentQuantity = parseInt(quantityElement.textContent);
+            currentQuantity++;
+            quantityElement.textContent = currentQuantity;
+            updateInputValue(itemId , currentQuantity);
+        }
+        function decrementQuantity(itemId) {
+            const quantityElement = document.getElementById(`quantity-${itemId}`);
+            let currentQuantity = parseInt(quantityElement.textContent);
+            if(currentQuantity > 0){
+                currentQuantity--;
+                quantityElement.textContent = currentQuantity;
+                updateInputValue(itemId , currentQuantity);
+            }
+        }
+        function updateInputValue(itemId , newQuantity) {
+            const inputElement = document.getElementById(`input-quantity-${itemId}`);
+            inputElement.value = newQuantity;
+        }
+    </script>
 </html>

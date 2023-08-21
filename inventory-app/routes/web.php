@@ -20,6 +20,8 @@ Route::get('/register' , [Controller::class , 'ShowRegisterForm'])->name('regist
 Route::middleware(['web','auth'])->group(function () {
     Route::get('/dashboard' , [Controller::class , 'ShowDashboard'])->name('dashboard');
 });
+Route::post('logout' , [Controller::class , 'logout'])->name("logout");
 Route::post('/register' , [Controller::class , 'sort'])->name('createUser');
 Route::post('/login' , [Controller::class , 'login'])->name('login.submit');
 Route::post('/additem' , [Controller::class , 'addItemtoUser'])->name("additem");
+

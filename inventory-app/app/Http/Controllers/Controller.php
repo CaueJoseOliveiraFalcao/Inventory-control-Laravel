@@ -53,6 +53,7 @@ class Controller extends BaseController
             return redirect()->route("register")->withErrors($exception->validator)->withInput();
         }
     }
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -60,12 +61,19 @@ class Controller extends BaseController
             'password' => 'required',
         ]);
 
-        if(Auth::attempt($credentials)) {
-            return redirect()->intended('/dashboard')->with('success' , 'Login Bem Succedido');
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $items = $user->items; // Recupera todos os itens associados ao usuário
+            
+            return view('dashboard', ['items' => $items])->with('success', 'Login Bem Sucedido');
         } else {
-            return redirect()->back()->withInput()->withErrors(['email' => 'As credenciais fornecidas são invalidas.']);
+            return redirect()->back()->withInput()->withErrors(['email' => 'As credenciais fornecidas são inválidas.']);
         }
-
+    }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        return redirect()->route('login')->with('success', 'Deslogado com sucesso');
     }
     public function addItemtoUser(Request $request)
     {   
@@ -75,35 +83,32 @@ class Controller extends BaseController
                 'itemQuantity' => 'required|max:255',
                 'userId' => 'required',
             ]);
-
-            $ItemName = $request -> itemName;
-            $ItemQuantity = $request -> itemQuantity;
-            $UserId = $request -> userId;
+    
+            $ItemName = $request->itemName;
+            $ItemQuantity = $request->itemQuantity;
+            $UserId = $request->userId;
             $user = User::find($UserId);
-            if($user) {
-                    $exist = $user->items()->where('nome' , $ItemName)->first();
-
-                    if (!$exist){
-                        $item = new Item([
-                            'itemName' => $ItemName,
-                            'itemQuantity' => $ItemQuantity,
-                            'user_id' => $UserId
-                        ]);
-                        $user->items()->save($item);
-                        return  redirect()->intended('/dashboard')->with('success' , 'Item adicionado na sua lista');
-                    }
-                    else{
-                        return response()->json(['message' => 'Nome do item ja existe'], 404);
-                    }  
+    
+            if ($user) {
+                $existingItem = $user->items()->where('itemName', $ItemName)->first();
+    
+                if (!$existingItem) {
+                    $item = new Item([
+                        'itemName' => $ItemName,
+                        'itemQuantity' => $ItemQuantity,
+                        'user_id' => $UserId
+                    ]);
+                    $user->items()->save($item);
+                    return redirect()->intended('/dashboard')->with('success', 'Item adicionado na sua lista');
+                } else { 
+                    return response()->json(['message' => 'Esse item já existe na sua lista.'], 400);
                 }
-            else {
+            } else {
                 return response()->json(['message' => 'Usuário não encontrado.'], 404);
             }
-        }}
-        catch (ValidationException $exception){
-            return redirect()->route("dasboard")->withErrors($exception->validator)->withInput();
         }
-        
-
-        
+        catch (ValidationException $exception) {
+            return redirect()->route("dashboard")->withErrors($exception->validator)->withInput();
+        }
     }
+}
