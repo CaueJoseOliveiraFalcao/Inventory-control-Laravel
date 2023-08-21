@@ -80,20 +80,26 @@ class Controller extends BaseController
             $ItemQuantity = $request -> itemQuantity;
             $UserId = $request -> userId;
             $user = User::find($UserId);
-
             if($user) {
-                $item = new Item([
-                    'itemName' => $ItemName,
-                    'itemQuantity' => $ItemQuantity,
-                    'user_id' => $UserId
-                ]);
-                $user->items()->save($item);
-                return  redirect()->intended('/dashboard')->with('success' , 'Item adicionado na sua lista');
-            }
+                    $exist = $user->items()->where('nome' , $ItemName)->first();
+
+                    if (!$exist){
+                        $item = new Item([
+                            'itemName' => $ItemName,
+                            'itemQuantity' => $ItemQuantity,
+                            'user_id' => $UserId
+                        ]);
+                        $user->items()->save($item);
+                        return  redirect()->intended('/dashboard')->with('success' , 'Item adicionado na sua lista');
+                    }
+                    else{
+                        return response()->json(['message' => 'Nome do item ja existe'], 404);
+                    }  
+                }
             else {
                 return response()->json(['message' => 'Usuário não encontrado.'], 404);
             }
-        }
+        }}
         catch (ValidationException $exception){
             return redirect()->route("dasboard")->withErrors($exception->validator)->withInput();
         }
@@ -101,4 +107,3 @@ class Controller extends BaseController
 
         
     }
-}
