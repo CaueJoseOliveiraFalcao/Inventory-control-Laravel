@@ -111,4 +111,23 @@ class Controller extends BaseController
             return redirect()->route("dashboard")->withErrors($exception->validator)->withInput();
         }
     }
+    public function alteritem(Request $request)
+    {
+        $itemId = $request->itemData;
+        $NewItemQuantity = $request->itemQuantity;
+        $item = Item::find($itemId);
+
+
+        if ($item) {
+            $item->itemQuantity = $NewItemQuantity;
+            $item->save();
+
+            $user = Auth::user();
+            $Useritems = $user->items;
+            return view('dashboard', ['items' => $Useritems])->with('success', 'Alterações Salvas');
+        }
+        else{
+            return response()->json(['message' => 'Usuário não encontrado.'], 404);
+        }
+    }
 }

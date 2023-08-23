@@ -150,10 +150,7 @@
                 <input class="login-submit" type="submit" value="Confirmar">
             </form>
         </div>   
-        <form method='POST' action="/saveitems">
-            @csrf
-
-
+        <form>
             <div class="container-itens">
             @foreach ($items as $item) 
                 <div class="item">
@@ -161,34 +158,47 @@
                     <p class="item-quantity" id="quantity-{{ $item->id }}">{{ $item->itemQuantity  }}</p>
                     <button type='button' class="item-sum" onclick="incrementQuantity({{ $item->id }})"> ➕ </button>
                     <button type='button' class="item-subtraction" onclick="decrementQuantity({{ $item->id }})"> ➖ </button>
-                    <input type="hidden" name="itemData[{{ $item->id }}]" id="input-quantity-{{ $item->id }}">
+                    <input type="hidden" id="itemData" value="{{ $item->id }}">
+                    <input type="hidden" id="itemQuantity" value="{{ $item->itemQuantity }}">
                     <button class="item-delete"> 🗑️ </button>
                 </div>
             @endforeach
-            <input class='save-changes-button' type="submit" value="Salvar Alterações">
+            <input  class='save-changes-button' onclick="Submit()"/>
             </div>
         </form>
     </body>
     <script>
-        function incrementQuantity(itemId) {
-            const quantityElement = document.getElementById(`quantity-${itemId}`);
-            let currentQuantity = parseInt(quantityElement.textContent);
-            currentQuantity++;
-            quantityElement.textContent = currentQuantity;
-            updateInputValue(itemId , currentQuantity);
-        }
-        function decrementQuantity(itemId) {
-            const quantityElement = document.getElementById(`quantity-${itemId}`);
-            let currentQuantity = parseInt(quantityElement.textContent);
-            if(currentQuantity > 0){
-                currentQuantity--;
+        function Submit(e){
+            const incrementQuantity = (itemId) => {
+                const quantityElement = document.getElementById(`quantity-${itemId}`);
+                let currentQuantity = parseInt(quantityElement.textContent);
+                currentQuantity++;
                 quantityElement.textContent = currentQuantity;
                 updateInputValue(itemId , currentQuantity);
             }
-        }
-        function updateInputValue(itemId , newQuantity) {
-            const inputElement = document.getElementById(`input-quantity-${itemId}`);
-            inputElement.value = newQuantity;
+            const decrementQuantity = (itemId) => {
+                const quantityElement = document.getElementById(`quantity-${itemId}`);
+                let currentQuantity = parseInt(quantityElement.textContent);
+                if(currentQuantity > 0){
+                    currentQuantity--;
+                    quantityElement.textContent = currentQuantity;
+                    updateInputValue(itemId , currentQuantity);
+                }
+            }
+            const updateInputValue = (itemId , newQuantity) => {
+                const inputElement = document.getElementById(`input-quantity-${itemId}`);
+                inputElement.value = newQuantity;
+            }
+            const itemData =  document.querySelectorAll('#itemData');
+            const itemQuantity = document.querySelectorAll('#itemQuantity');
+            const formData = new FormData();
+            
+            itemData.forEach((itemDataElement , index) => {
+                const itemId = itemDataElement.value;
+                const EachItemQuantity = itemQuantity[index].value
+                console.log(itemId , EachItemQuantity);
+
+            });
         }
     </script>
 </html>
