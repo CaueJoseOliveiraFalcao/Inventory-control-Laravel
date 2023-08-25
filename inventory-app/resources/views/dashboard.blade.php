@@ -166,8 +166,7 @@
             <input  class='save-changes-button' onclick="Submit()"/>
             </div>
         </form>
-    </body>
-    <script>
+        <script>
         function Submit(e){
             const incrementQuantity = (itemId) => {
                 const quantityElement = document.getElementById(`quantity-${itemId}`);
@@ -198,7 +197,21 @@
                 const EachItemQuantity = itemQuantity[index].value
                 console.log(itemId , EachItemQuantity);
 
+                formData.append(`itemId[$(index)]` , itemId)
+                formData.append(`EachQuantity[$(index)]` , EachItemQuantity)
+                console.log(formData);
+            });
+            console.log(formData);
+
+            axios.post("/alteritem" , formData)
+                .then(response => {
+                    console.log(response.data);
+                });
+                .catch(error => {
+                    console.error(error);
             });
         }
     </script>
+    </body>
+    
 </html>
