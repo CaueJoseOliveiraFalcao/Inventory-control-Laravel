@@ -163,11 +163,10 @@
                     <button class="item-delete"> 🗑️ </button>
                 </div>
             @endforeach
-            <input  class='save-changes-button' onclick="Submit()"/>
+            <a onclick='submit()'>enviar</a>
             </div>
         </form>
         <script>
-        function Submit(e){
             const incrementQuantity = (itemId) => {
                 const quantityElement = document.getElementById(`quantity-${itemId}`);
                 let currentQuantity = parseInt(quantityElement.textContent);
@@ -185,32 +184,16 @@
                 }
             }
             const updateInputValue = (itemId , newQuantity) => {
-                const inputElement = document.getElementById(`input-quantity-${itemId}`);
+                const inputElement = document.getElementById(`quantity-${itemId}`);
                 inputElement.value = newQuantity;
             }
-            const itemData =  document.querySelectorAll('#itemData');
-            const itemQuantity = document.querySelectorAll('#itemQuantity');
-            const formData = new FormData();
-            
-            itemData.forEach((itemDataElement , index) => {
-                const itemId = itemDataElement.value;
-                const EachItemQuantity = itemQuantity[index].value
-                console.log(itemId , EachItemQuantity);
-
-                formData.append(`itemId[$(index)]` , itemId)
-                formData.append(`EachQuantity[$(index)]` , EachItemQuantity)
-                console.log(formData);
-            });
-            console.log(formData);
-
-            axios.post("/alteritem" , formData)
-                .then(response => {
-                    console.log(response.data);
-                });
-                .catch(error => {
-                    console.error(error);
-            });
-        }
+            const submit = () => {
+                const allQuantity = document.querySelectorAll('.item-quantity');
+                const itemsId = document.querySelectorAll('#itemData');
+                for(i = 0; allQuantity.length > i; i++){
+                    console.log(allQuantity[i].textContent , itemsId[i].value);
+                }
+            }
     </script>
     </body>
     

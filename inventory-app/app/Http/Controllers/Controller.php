@@ -99,7 +99,8 @@ class Controller extends BaseController
                         'user_id' => $UserId
                     ]);
                     $user->items()->save($item);
-                    return redirect()->intended('/dashboard')->with('success', 'Item adicionado na sua lista');
+                    $items = $user->items;
+                    return view('dashboard', ['items' => $items])->with('success', 'Login Bem Sucedido');
                 } else { 
                     return response()->json(['message' => 'Esse item já existe na sua lista.'], 400);
                 }
@@ -117,17 +118,5 @@ class Controller extends BaseController
         $NewItemQuantity = $request->itemQuantity;
         $item = Item::find($itemId);
 
-
-        if ($item) {
-            $item->itemQuantity = $NewItemQuantity;
-            $item->save();
-
-            $user = Auth::user();
-            $Useritems = $user->items;
-            return view('dashboard', ['items' => $Useritems])->with('success', 'Alterações Salvas');
-        }
-        else{
-            return response()->json(['message' => 'Usuário não encontrado.'], 404);
-        }
     }
 }

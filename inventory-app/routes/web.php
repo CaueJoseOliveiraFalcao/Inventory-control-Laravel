@@ -17,11 +17,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/' , [Controller::class, 'ShowLoginForm'])->name('login');
 Route::get('/register' , [Controller::class , 'ShowRegisterForm'])->name('register');
-Route::middleware(['web','auth'])->group(function () {
-    Route::get('/dashboard' , [Controller::class , 'ShowDashboard'])->name('dashboard');
-});
-Route::post('logout' , [Controller::class , 'logout'])->name("logout");
+
+
 Route::post('/register' , [Controller::class , 'sort'])->name('createUser');
 Route::post('/login' , [Controller::class , 'login'])->name('login.submit');
-Route::post('/additem' , [Controller::class , 'addItemtoUser'])->name("additem");
-Route::post('/alteritem' , [Controller::class , 'alteritem'])->name('alter');
+
+Route::middleware(['web','auth'])->group(function () {
+    Route::get('/dashboard' , [Controller::class , 'ShowDashboard'])->name('dashboard');
+    Route::post('logout' , [Controller::class , 'logout'])->name("logout");
+    Route::post('/additem' , [Controller::class , 'addItemtoUser'])->name("additem");
+});
