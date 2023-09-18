@@ -9,6 +9,8 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+        <script src='./jquery.js'></script>
+        <meta name="_token" content="{{ csrf_token() }}">
 
         <!-- Styles -->
         <style>
@@ -168,6 +170,7 @@
             </div>
         </form>
         <script>
+            $
             const incrementQuantity = (itemId) => {
                 const quantityElement = document.getElementById(`quantity-${itemId}`);
                 let currentQuantity = parseInt(quantityElement.textContent);
@@ -205,17 +208,25 @@
                 }
                 console.log(ArrayItems);
 
-                const axios = require('axios');
+                var _token = $('meta[name="_token"]').attr('content');
 
-                axios.post('alterQuantity' , ArrayItems)
-                    .then(response => {
-                        console.log(response.data);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-                }
-            
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': _token
+                        }
+                    });
+                        $.ajax({
+                            url: '/alterQuantity',
+                            type: 'POST',
+                            data: {ArrayItems : ArrayItems},
+                            dataType: 'JSON',
+
+                            success: function(data){
+                                console.log(data);
+                            }
+                        });
+                        return false;
+                    };
     </script>
     </body>
     

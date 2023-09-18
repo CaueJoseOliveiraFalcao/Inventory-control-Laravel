@@ -121,8 +121,9 @@ class Controller extends BaseController
     }
     public function alterQuantity(Request $request)
     {
-        $JsonItems = $request->input('ArrayItem');
+        $Itens = response()->json($data);
         dd($JsonItems);
-        response()->json($data);
+        return response()->json($data);
     }
+    
 }
