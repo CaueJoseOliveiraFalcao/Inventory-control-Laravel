@@ -151,6 +151,7 @@
             </form>
         </div>   
         <form>
+            @csrf
             <div class="container-itens">
             @foreach ($items as $item) 
                 <div class="item">
@@ -190,10 +191,31 @@
             const submit = () => {
                 const allQuantity = document.querySelectorAll('.item-quantity');
                 const itemsId = document.querySelectorAll('#itemData');
-                for(i = 0; allQuantity.length > i; i++){
-                    console.log(allQuantity[i].textContent , itemsId[i].value);
+                const ArrayItems = []
+
+                for (let index = 0; index < allQuantity.length; index++) {
+                    let QuantityEach = allQuantity[index].textContent;
+                    let IdEach = itemsId[index].value
+
+                    const obj = {
+                        'quantidade' : QuantityEach,
+                        'Id' : IdEach
+                    };
+                    ArrayItems.push(obj);
                 }
-            }
+                console.log(ArrayItems);
+
+                const axios = require('axios');
+
+                axios.post('alterQuantity' , ArrayItems)
+                    .then(response => {
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+                }
+            
     </script>
     </body>
     

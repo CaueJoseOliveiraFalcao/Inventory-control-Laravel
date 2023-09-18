@@ -26,4 +26,5 @@ Route::middleware(['web','auth'])->group(function () {
     Route::get('/dashboard' , [Controller::class , 'ShowDashboard'])->name('dashboard');
     Route::post('logout' , [Controller::class , 'logout'])->name("logout");
     Route::post('/additem' , [Controller::class , 'addItemtoUser'])->name("additem");
+    Route::post('/alterQuantity' , [Controller::class , 'alterQuantity'])->name('alterQuantity');
 });

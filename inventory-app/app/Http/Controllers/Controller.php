@@ -119,4 +119,10 @@ class Controller extends BaseController
         $item = Item::find($itemId);
 
     }
+    public function alterQuantity(Request $request)
+    {
+        $JsonItems = $request->input('ArrayItem');
+        dd($JsonItems);
+        response()->json($data);
+    }
 }
