@@ -10,7 +10,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
         <script src='./jquery.js'></script>
-        <meta name="_token" content="{{ csrf_token() }}">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Styles -->
         <style>
@@ -116,6 +116,14 @@
                 transition: background-color 0.3s ease, box-shadow 0.3s ease;
                 border-style: none;
             }
+            .submitAlter{
+                background-color:#00b300;
+                color: white;
+                padding: 1rem;
+                border-radius: 10px;
+                margin-top: 1rem;
+                text-align: center
+            }
         </style>
     </head>
     <body class="antialiased">
@@ -152,7 +160,7 @@
                 <input class="login-submit" type="submit" value="Confirmar">
             </form>
         </div>   
-        <form>
+        <form class="form" action="/alterQuantity" method="POST">
             @csrf
             <div class="container-itens">
             @foreach ($items as $item) 
@@ -163,14 +171,14 @@
                     <button type='button' class="item-subtraction" onclick="decrementQuantity({{ $item->id }})"> ➖ </button>
                     <input type="hidden" id="itemData" value="{{ $item->id }}">
                     <input type="hidden" id="itemQuantity" value="{{ $item->itemQuantity }}">
-                    <button class="item-delete"> 🗑️ </button>
+                    <input type="checkbox" class="item-delete"> 🗑️ </button>
                 </div>
             @endforeach
-            <a onclick='submit()'>enviar</a>
+            <input type="hidden" name="array" id="array">
             </div>
+            <a class="submitAlter"  onclick="submit()">Enviar</a>
         </form>
         <script>
-            $
             const incrementQuantity = (itemId) => {
                 const quantityElement = document.getElementById(`quantity-${itemId}`);
                 let currentQuantity = parseInt(quantityElement.textContent);
@@ -194,39 +202,27 @@
             const submit = () => {
                 const allQuantity = document.querySelectorAll('.item-quantity');
                 const itemsId = document.querySelectorAll('#itemData');
+                const allTrashCheckBox = document.querySelectorAll('.item-delete')
                 const ArrayItems = []
 
                 for (let index = 0; index < allQuantity.length; index++) {
                     let QuantityEach = allQuantity[index].textContent;
                     let IdEach = itemsId[index].value
+                    let EachTrash = allTrashCheckBox[index].checked
 
                     const obj = {
                         'quantidade' : QuantityEach,
-                        'Id' : IdEach
+                        'Id' : IdEach,
+                        'TrashStatus' : EachTrash
                     };
                     ArrayItems.push(obj);
                 }
-                console.log(ArrayItems);
+                
+                var jsonitems = JSON.stringify(ArrayItems);
 
-                var _token = $('meta[name="_token"]').attr('content');
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': _token
-                        }
-                    });
-                        $.ajax({
-                            url: '/alterQuantity',
-                            type: 'POST',
-                            data: {ArrayItems : ArrayItems},
-                            dataType: 'JSON',
-
-                            success: function(data){
-                                console.log(data);
-                            }
-                        });
-                        return false;
-                    };
+                var element = document.getElementById("array").value = jsonitems;
+                document.querySelector('.form').submit()
+            }
     </script>
     </body>
     

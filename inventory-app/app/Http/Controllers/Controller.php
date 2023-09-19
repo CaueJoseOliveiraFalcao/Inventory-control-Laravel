@@ -112,18 +112,27 @@ class Controller extends BaseController
             return redirect()->route("dashboard")->withErrors($exception->validator)->withInput();
         }
     }
-    public function alteritem(Request $request)
-    {
-        $itemId = $request->itemData;
-        $NewItemQuantity = $request->itemQuantity;
-        $item = Item::find($itemId);
-
-    }
     public function alterQuantity(Request $request)
     {
-        $Itens = response()->json($data);
-        dd($JsonItems);
-        return response()->json($data);
+        $itemsJson = $request->input('array');
+        $items = json_decode($itemsJson , true);
+        foreach ($items as $item) {
+            $id = $item['Id']; 
+            $quantidade = $item['quantidade'];
+            $trashStatus = $item['TrashStatus'];
+            $DbItem = Item::find($id);
+
+            if ($trashStatus === true){
+                $DbItem->delete();
+            }
+            else{
+                $DbItem->itemQuantity = $quantidade;
+                $DbItem->save();
+            }
+        }
+        $user = Auth::user();
+        $userItems = $user->items;
+        return view('dashboard', ['items' => $userItems])->with('success', 'Alterações Feitas');
+
     }
-    
 }
