@@ -31,6 +31,10 @@ class Controller extends BaseController
         $user = Auth::user();  
         return view('dashboard')->with('user', $user);
     }
+    public function ShowReset()
+    {
+        return view('auth.resetpassword');
+    }
     public function sort(Request $request): RedirectResponse
     {
         try {
@@ -131,8 +135,18 @@ class Controller extends BaseController
             }
         }
         $user = Auth::user();
-        $userItems = $user->items;
-        return view('dashboard', ['items' => $userItems])->with('success', 'Alterações Feitas');
+        $items = $user->items;
+        return view('dashboard', ['items' => $items]);
 
+    }
+    public function SendReset(Request $request)
+    {
+        $email = $request -> email;
+        $existingItem = User::where('email', $email)->first();
+
+        if ($existingItem) {
+            return 'existe';
+        }
+        
     }
 }

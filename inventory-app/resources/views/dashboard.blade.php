@@ -134,28 +134,14 @@
             @csrf
             <input class='logout-button' type="submit" value="Sair">
         </form>
-        @if ($errors->any())
-        <div class="error">
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{$error}}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-        <div class="success">
-            @if (session('success'))
-                <p>{{session("success")}}</p>
-            @endif
-        </div>
         <div class="container-add-itens">
             <form action="{{route('additem')}}" method="POST">
                 @csrf
                 <h1>Adicione um Item</h1>
                 <label  for="itemName">Nome do Item</label>
-                <input type="text" name="itemName">
+                <input type="text" name="itemName" required >
                 <label style="margin-top: 1rem;"  for="ItemQuantity">Quantidade</label>
-                <input type="number" name="itemQuantity">
+                <input type="number" name="itemQuantity" required>
                 <input type="hidden" name="userId" value="{{ auth()->user()->id }}">
                 <input class="login-submit" type="submit" value="Confirmar">
             </form>

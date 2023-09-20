@@ -28,3 +28,6 @@ Route::middleware(['web','auth'])->group(function () {
     Route::post('/additem' , [Controller::class , 'addItemtoUser'])->name("additem");
     Route::post('/alterQuantity' , [Controller::class , 'alterQuantity'])->name('alterQuantity');
 });
+
+Route::get('/reset' , [Controller::class, 'ShowReset'])->name('ShowReset');
+Route::post('/sendResetCode' ,  [Controller::class, 'SendReset'])->name('SendReset');
