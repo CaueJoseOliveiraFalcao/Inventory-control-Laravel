@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPasswordMail;
+
 
 class Controller extends BaseController
 {
@@ -34,6 +37,10 @@ class Controller extends BaseController
     public function ShowReset()
     {
         return view('auth.resetpassword');
+    }
+    public function ShowInsertReset()
+    {
+        return view('auth.insertresetcode');
     }
     public function sort(Request $request): RedirectResponse
     {
@@ -142,11 +149,16 @@ class Controller extends BaseController
     public function SendReset(Request $request)
     {
         $email = $request -> email;
-        $existingItem = User::where('email', $email)->first();
-
-        if ($existingItem) {
-            return 'existe';
+        $user = User::where('email', $email)->first();
+        $randomCode = mt_rand(10000, 99999);
+        if ($user) {
+            $user->password_reset_code = $randomCode;
+            $user->save;
+        } else {
+        return "O email não está registrado.";
         }
-        
+        Mail::to($email)->send(new ResetPasswordMail($randomCode));
+
+        return "Um código de recuperação foi enviado para o seu email.";
     }
 }
