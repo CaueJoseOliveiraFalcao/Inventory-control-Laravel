@@ -92,15 +92,12 @@
             @endif
         </div>
         <div class="login-card">
-            <form action="{{route('login.submit')}}" method="POST">
+            <form action="/checkcode" method="POST">
                 @csrf
-                <h1>Faça seu login</h1>
-                <label  for="email">Email</label>
-                <input type="email" name="email">
-                <label style="margin-top: 1rem;"  for="password">Senha</label>
-                <input type="password" name="password">
+                <h1>Confirme o codigo do seu email</h1>
+                <label  for="code">Codigo</label>
+                <input type="number" name="code">
                 <a style="margin-top: 1rem " href="/register">Não e registrado?</a>
-                <a style="margin-top: 1rem " href="/reset">Esqueceu a Senha ?</a>
                 <input class="login-submit" type="submit" value="Confirmar">
             </form>
         </div>

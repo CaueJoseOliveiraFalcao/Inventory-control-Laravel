@@ -31,3 +31,7 @@ Route::middleware(['web','auth'])->group(function () {
 
 Route::get('/reset' , [Controller::class, 'ShowReset'])->name('ShowReset');
 Route::post('/sendResetCode' ,  [Controller::class, 'SendReset'])->name('SendReset');
+Route::get('/confirmcode' , [Controller::class , 'ShowConfirmCode'])->name('confirmcode');
+Route::post('/checkcode' , [Controller::class , 'CheckCode'])->name('CheckCode');
+Route::get('/newpassword' , [Controller::class , 'ShowNewPassword'])->name('shonewpassword');
+Route::post('/insertnewpassword' , [Controller::class , 'InsetNewPassword'])->name('insertnewpassword');

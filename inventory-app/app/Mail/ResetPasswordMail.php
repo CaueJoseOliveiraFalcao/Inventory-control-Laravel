@@ -20,7 +20,7 @@ class ResetPasswordMail extends Mailable
     public function build()
     {
         {
-            return $this->view('auth.emailcode')
+            return $this->view('emailcode')
                         ->with(['code' => $this->code]); // Passando o código para a view
         }
     }

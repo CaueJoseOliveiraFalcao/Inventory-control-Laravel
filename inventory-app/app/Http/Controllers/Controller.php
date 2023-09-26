@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use App\Models\Item;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -36,18 +36,27 @@ class Controller extends BaseController
     }
     public function ShowReset()
     {
-        return view('auth.resetpassword');
+        return view('resetpassword');
     }
     public function ShowInsertReset()
     {
-        return view('auth.insertresetcode');
+        return view('insertresetcode');
+    }
+    public function ShowConfirmCode()
+    {
+        return view('confirmcode');
+    }
+    public function ShowNewPassword (User $user)
+    {
+        Session::forget('password_reset_code');
+        return view('newpassword', compact('user'));
     }
     public function sort(Request $request): RedirectResponse
     {
         try {
             $validated = $request->validate([
                 'name' => 'required|max:255',
-                'email' => 'required|max:255|unique:users',
+                'email' => 'email:rfc,dns|required',
                 'password' => 'required|min:8',
             ]);
             $name = $request -> name;
@@ -153,12 +162,39 @@ class Controller extends BaseController
         $randomCode = mt_rand(10000, 99999);
         if ($user) {
             $user->password_reset_code = $randomCode;
-            $user->save;
+            $user->save();
+            Mail::to($email)->send(new ResetPasswordMail($randomCode));
+            return redirect()->route('confirmcode')->with('success', 'Email enviado com sucesso! Verifique seu email para o código de recuperação.');
         } else {
-        return "O email não está registrado.";
+            return "Email nao registrado";
         }
-        Mail::to($email)->send(new ResetPasswordMail($randomCode));
-
-        return "Um código de recuperação foi enviado para o seu email.";
     }
+    public function CheckCode(Request $request)
+    {
+        $usercode = $request -> code;
+        $existcode = User::where('password_reset_code', $usercode)->first();
+        if ($existcode) {
+            return redirect()->route('shonewpassword', ['user' => $existcode])->with('success', 'Digite sua nova senha');
+
+        } else {
+            return "codigo incorreto";
+        }
+    }
+    public function InsetNewPassword(Request $request)
+    {
+        $id = $request->id;
+        $newPassword = $request->password;
+
+        $user = User::find($id);
+
+        if ($user) {
+            $user->password_reset_code = bcrypt($newPassword);
+            $user->save();
+
+            return redirect()->route('login')->with('success', 'Senha Alterada');
+        } else {
+            return "Usuário não encontrado";
+        }
+    }
+
 }
